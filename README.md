@@ -1,17 +1,21 @@
-# 项目描述
+# project description (项目描述)
 
 > project name : distributed-lock
 > author : LGZ
 > description: java 实现 redis 分布式锁.
 
-## module introduce
-| module name | description | else |
+## module introduce (模块介绍)
+前置说明：运行之前需要先启动redis，并 `set Mi11 100` 初始化商品库存
+| module name | description | explain |
 | :---: | :--- | :---: |
-|  redis001 | 实现基本业务，请求一次接口扣减一个库存，实现抢购逻辑。用ReentrantLock加锁.| something else |
-|  redis002 | 和redis001完全相同的代码  | 用 nginx 反代负载均衡，<br/> jmeter 测试高并发情况 |
-|  003_release |   |   |
+|  redis001 | 实现基本业务，请求一次接口扣减一个库存，实现抢购逻辑。用 ReentrantLock 加锁.| 单台服务 |
+|  redis002 | 和redis001完全相同的代码  | 多台服务 <br/> 用 nginx 反代负载均衡，<br/> jmeter 测试高并发情况 |
+|  003_release | …… | …… |
 
-## development environment
-- SYSTEM: windows 10
-- LANGUAGE: JAVA 1.8
-- IDE: IntelliJ IDEA
+## development environment (开发环境)
+- SYSTEM:  windows 10
+- LANGUAGE:  JAVA 1.8
+- IDE:  IntelliJ IDEA
+- redis
+- nginx-1.19.6
+- apache-jmeter-5.4
