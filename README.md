@@ -19,6 +19,6 @@
 - SYSTEM:  windows 10
 - LANGUAGE:  JAVA 1.8
 - IDE:  IntelliJ IDEA
-- redis
+- redis: 单台
 - nginx-1.19.6
 - apache-jmeter-5.4
