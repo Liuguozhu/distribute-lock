@@ -41,7 +41,7 @@ public class RedisController {
         // 获取锁
         RLock lock = redisson.getLock(REDIS_LOCK);
         try {
-            // 加锁，同时给增加过期时间，防止程序宕机一直没有释放锁。
+            // 加锁
             lock.lock();
             //查看库存
             String result = stringRedisTemplate.opsForValue().get(key);
