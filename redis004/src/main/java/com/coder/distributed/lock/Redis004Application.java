@@ -15,7 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @Slf4j
 @SpringBootApplication
-@ComponentScan("com.coder.distributed.com.coder.distribute.lock")
+@ComponentScan("com.coder.distributed")
 public class Redis004Application {
 
     public static void main(String[] args) {

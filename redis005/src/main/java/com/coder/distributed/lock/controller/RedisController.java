@@ -1,4 +1,4 @@
-package com.coder.distribute.lock.controller;
+package com.coder.distributed.lock.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author LGZ
  * @package PACKAGE_NAME
- * @className com.coder.distributed.com.coder.distribute.lock.controller.RedisController
- * @description distributed-com.coder.distribute.lock com.coder.distributed.com.coder.distribute.lock.controller.RedisController
+ * @className com.coder.distributed.RedisController
+ * @description distributed-com.coder.distribute.lock com.coder.distributed.RedisController
  * @date 2021/1/18 13:28:52
  */
 @Slf4j
@@ -39,11 +39,12 @@ public class RedisController {
         String key = "Mi11";
         String returnString;
         String value = UUID.randomUUID().toString() + Thread.currentThread().getName();
-       // 获取锁
+        // 获取锁
         RLock lock = redisson.getLock(REDIS_LOCK);
         try {
             // 加锁，同时给增加过期时间，防止程序宕机一直没有释放锁。
-            boolean lockResult = lock.tryLock(10, TimeUnit.SECONDS);
+//            boolean lockResult = lock.tryLock(10, TimeUnit.SECONDS);
+            boolean lockResult = lock.tryLock();
             if (lockResult) {
                 log.info(value + "加锁成功！");
 
@@ -66,8 +67,10 @@ public class RedisController {
             e.printStackTrace();
             return null;
         } finally {
-            lock.unlock();
-            log.info(value + "释放锁成功！");
+            if (lock.isLocked() && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+                log.info(value + "释放锁成功！");
+            }
         }
         return null;
     }

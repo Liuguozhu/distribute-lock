@@ -1,13 +1,15 @@
 package com.coder.distributed.lock.controller;
 
+import com.coder.distributed.lock.config.JedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -24,12 +26,17 @@ public class RedisController {
 
     private static final String REDIS_LOCK = "DISTRIBUTE_LOCK";
 
-    @Resource
-    private StringRedisTemplate stringRedisTemplate;
-
     @Value("${server.port}")
     private String serverPort;
 
+    /**
+     * RedisTemplate 的子类,子类一般比父类的功能更多。
+     **/
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private JedisUtil jedisUtil;
 
     @GetMapping("buy")
     public String buy() {
@@ -66,30 +73,52 @@ public class RedisController {
 //                        stringRedisTemplate.delete(REDIS_LOCK);
 //                    }
                     //redis 官方建议是通过 lua 脚本保证原子性 详情参看：https://redis.io/commands/set。
-                    // 如果不用lua脚本，我们可以使用 redis 事务来保证 if 和 delete 的原子性
-                    // redis 事务说明(https://github.com/Liuguozhu/distribute-lock/blob/master/Redis-Transactions.md)
-                    while (true) {
-                        log.info(value + "开始设置事务");
-                        stringRedisTemplate.watch(REDIS_LOCK);
-                        if (value.equals(stringRedisTemplate.opsForValue().get(REDIS_LOCK))) {
-                            stringRedisTemplate.setEnableTransactionSupport(true);
-                            stringRedisTemplate.multi();
-                            // 无论中间程序有无出现异常，都必须要释放锁
-                            stringRedisTemplate.delete(REDIS_LOCK);
-                            List<Object> list = stringRedisTemplate.exec();
-                            if (list == null) {
-                                log.info(value + "事务执行失败");
-                                stringRedisTemplate.discard();
-                                continue;
-                            }
-                        }else{
-                            log.info(value + "校验锁不一致······");
+                    //由于reidTemplate 实现script 脚本比较复杂，所以我们使用 jedis 来实现
+                    Jedis jedis = jedisUtil.getJedis();
+                    String script = "if redis.call('get',KEYS[1]) == ARGV[1] " +
+                            "then " +
+                            "    return redis.call('del',KEYS[1]) " +
+                            "else " +
+                            "    return 0 " +
+                            "end";
+                    try {
+                        Object o = jedis.eval(script, Collections.singletonList(REDIS_LOCK), Collections.singletonList(value));
+                        if ("1".equals(o.toString())) {
+                            log.info(" lua 脚本 redis锁释放成功");
+                        } else {
+                            log.info(" lua 脚本 redis锁释放失败");
                         }
-                        log.info(value + "事务执行成功");
-                        stringRedisTemplate.unwatch();
-                        log.info(value + "释放锁成功！");
-                        break;
+                    } catch (Exception e) {
+                        log.info(" lua 脚本 redis锁释放异常：{}", e);
+                    } finally {
+                        if (null != jedis) {
+                            jedis.close();
+                        }
                     }
+
+//                    // 如果不用lua脚本，我们可以使用 redis 事务来保证 if 和 delete 的原子性
+//                    // redis 事务说明(https://github.com/Liuguozhu/distribute-lock/blob/master/Redis-Transactions.md)
+//                    while (true) {
+//                        log.info(value + "开始设置事务");
+//                        stringRedisTemplate.watch(REDIS_LOCK);
+//                        if (value.equals(stringRedisTemplate.opsForValue().get(REDIS_LOCK))) {
+//                            stringRedisTemplate.multi();
+//                            // 无论中间程序有无出现异常，都必须要释放锁
+//                            stringRedisTemplate.delete(REDIS_LOCK);
+//                            List<Object> list = stringRedisTemplate.exec();
+//                            if (list == null) {
+//                                log.info(value + "事务执行失败");
+//                                stringRedisTemplate.discard();
+//                                continue;
+//                            }
+//                        } else {
+//                            log.info(value + "校验锁不一致······");
+//                        }
+//                        log.info(value + "事务执行成功");
+//                        stringRedisTemplate.unwatch();
+//                        log.info(value + "释放锁成功！");
+//                        break;
+//                    }
 
                 }
             }
