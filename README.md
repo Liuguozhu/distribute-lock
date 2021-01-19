@@ -1,7 +1,9 @@
 # project description (项目描述)
 
 > project name : distributed-lock
+
 > author : LGZ
+
 > description: java 实现 redis 分布式锁.
 
 ## module introduce (模块介绍)
