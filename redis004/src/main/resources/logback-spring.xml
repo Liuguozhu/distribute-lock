@@ -8,7 +8,7 @@
         </filter>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) [%highlight(%-5level)] [%boldMagenta(%logger{20}) - line:%L] - %cyan(%msg%n)
+                %red(%d{yyyy-MM-dd HH:mm:ss:SSS}) %green([%thread]) [%highlight(%-5level)] [%boldMagenta(%logger{20}) - line:%L] - %cyan(%msg%n)
             </pattern>
         </layout>
     </appender>
@@ -20,7 +20,7 @@
         </filter>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) [%highlight(%-5level)] [%boldMagenta(%logger{20}) - line:%L] - %cyan(%msg%n)
+                %red(%d{yyyy-MM-dd HH:mm:ss:SSS}) %green([%thread]) [%highlight(%-5level)] [%boldMagenta(%logger{20}) - line:%L] - %cyan(%msg%n)
             </pattern>
         </layout>
     </appender>
@@ -32,20 +32,20 @@
         </filter>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) [%highlight(%-5level)] [%boldMagenta(%logger{50}) - line:%L] - %cyan(%msg%n)
+                %red(%d{yyyy-MM-dd HH:mm:ss:SSS}) %green([%thread]) [%highlight(%-5level)] [%boldMagenta(%logger{50}) - line:%L] - %cyan(%msg%n)
             </pattern>
         </layout>
     </appender>
     <appender name="infoFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- test -->
-        <File>./logs/log_server4.log</File>
+        <File>./logs/log_server3.log</File>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{20} - line:%L - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} [%thread] %-5level %logger{20} - line:%L - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./logs/log-%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -56,14 +56,14 @@
 
     <appender name="errorFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- test -->
-        <File>./logs/error_server4.log</File>
+        <File>./logs/error_server3.log</File>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{20} - line:%L - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} [%thread] %-5level %logger{20} - line:%L - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./logs/error.log.%d{yyyy-MM-dd}.log</fileNamePattern>

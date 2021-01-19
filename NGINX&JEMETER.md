@@ -3,8 +3,8 @@
 安装使用教程请自行百度/谷歌
 ```
     upstream my_server{
-        server localhost:1111 weight=5 max_fails=2 fail_timeout=30s;
-	    server 127.0.0.1:2222 weight=5 max_fails=2 fail_timeout=30s;
+        server localhost:1111 weight=1 max_fails=2 fail_timeout=30s;
+	    server 127.0.0.1:2222 weight=1 max_fails=2 fail_timeout=30s;
     }
     server {
         listen       80;

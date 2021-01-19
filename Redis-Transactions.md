@@ -49,3 +49,31 @@ QUEUED
 2) (integer) 1
 
 ```
+加上 WATCH，并且在执行事务之前，没有其他 redis 连接对 监听的这个 key 进行修改。则代码如下
+```
+> WATCH k1
+OK
+> MULTI
+OK
+> SET k1 v1
+QUEUED
+> SET k2 v2
+QUEUED
+> EXEC
+1) (integer) 1
+2) (integer) 1
+
+```
+加上 WATCH，如果在执行事务之前，有其他redis连接对监听的这个 key 进行修改 如：`SET k1 111`。则执行结果如下
+```
+> WATCH k1
+OK
+> MULTI
+OK
+> SET k1 v1
+QUEUED
+> SET k2 v2
+QUEUED
+> EXEC
+(nil)
+```

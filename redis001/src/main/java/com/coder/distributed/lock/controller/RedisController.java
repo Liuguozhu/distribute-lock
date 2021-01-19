@@ -13,8 +13,8 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author LGZ
  * @package PACKAGE_NAME
- * @className com.coder.distributed.lock.controller.RedisController
- * @description distributed-lock com.coder.distributed.lock.controller.RedisController
+ * @className com.coder.distributed.com.coder.distribute.lock.controller.RedisController
+ * @description distributed-com.coder.distribute.lock com.coder.distributed.com.coder.distribute.lock.controller.RedisController
  * @date 2021/1/18 13:28:52
  */
 @Slf4j

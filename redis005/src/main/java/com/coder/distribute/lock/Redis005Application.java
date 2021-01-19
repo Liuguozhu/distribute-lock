@@ -1,4 +1,4 @@
-package com.coder.distributed.lock;
+package com.coder.distribute.lock;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -16,12 +16,12 @@ import org.springframework.context.annotation.ComponentScan;
 @Slf4j
 @SpringBootApplication
 @ComponentScan("com.coder.distributed.com.coder.distribute.lock")
-public class Redis004Application {
+public class Redis005Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Redis004Application.class, args);
+        SpringApplication.run(Redis005Application.class, args);
 
-        log.info(Redis004Application.class.getSimpleName() + " is success!");
+        log.info(Redis005Application.class.getSimpleName() + " is success!");
     }
 }
 

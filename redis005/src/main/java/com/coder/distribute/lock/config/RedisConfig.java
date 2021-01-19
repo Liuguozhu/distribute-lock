@@ -1,5 +1,8 @@
-package com.coder.distributed.lock.config;
+package com.coder.distribute.lock.config;
 
+import org.redisson.Redisson;
+import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -19,6 +22,19 @@ import java.io.Serializable;
 @Configuration
 public class RedisConfig {
 
+
+    @Value("${spring.redis.database}")
+    private Integer database;
+
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private String port;
+
+    @Value("${spring.redis.password}")
+    private String password;
+
     @Bean
     public RedisTemplate<String, Serializable> redisTemplate(LettuceConnectionFactory connectionFactory) {
         RedisTemplate<String, Serializable> redisTemplate = new RedisTemplate<>();
@@ -26,5 +42,13 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         return redisTemplate;
+    }
+
+    @Bean
+    public Redisson redisson() {
+        Config config = new Config();
+        String address = "redis://" + host + ":" + port;
+        config.useSingleServer().setAddress(address).setDatabase(database);
+        return (Redisson) Redisson.create(config);
     }
 }

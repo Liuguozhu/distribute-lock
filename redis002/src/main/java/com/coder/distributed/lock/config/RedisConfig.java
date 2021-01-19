@@ -12,8 +12,8 @@ import java.io.Serializable;
 /**
  * @author LGZ
  * @package PACKAGE_NAME
- * @className com.coder.distributed.lock.config.RedisConfig
- * @description distributed-lock com.coder.distributed.lock.config.RedisConfig
+ * @className com.coder.distributed.com.coder.distribute.lock.config.RedisConfig
+ * @description distributed-com.coder.distribute.lock com.coder.distributed.com.coder.distribute.lock.config.RedisConfig
  * @date 2021/1/18 13:28:32
  */
 @Configuration
