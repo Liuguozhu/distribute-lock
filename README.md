@@ -24,3 +24,4 @@
 - redis: 单台
 - nginx-1.19.6
 - apache-jmeter-5.4
+- spring-boot-2.3.4.RELEASE
