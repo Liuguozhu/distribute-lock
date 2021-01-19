@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -57,10 +58,31 @@ public class RedisController {
                     e.printStackTrace();
                     return returnString;
                 } finally {
+                    // 无事务--无法保证 if 判断 和 delete 的原子性
+                    // 验证是不是自己的锁，防止程序中途卡住，消耗时间超过10秒，锁已被 redis 过期释放。别的线程已经抢到了新的锁，避免删除了别人的锁。造成恶性循环。
                     if (value.equals(stringRedisTemplate.opsForValue().get(REDIS_LOCK))) {
                         // 无论中间程序有无出现异常，都必须要释放锁
                         stringRedisTemplate.delete(REDIS_LOCK);
                     }
+                    //redis 官方建议是通过 lua 脚本保证原子性 详情参看：https://redis.io/commands/set。
+                    // 如果不用lua脚本，我们可以使用 redis 事务来保证 if 和 delete 的原子性
+                    while (true) {
+                        stringRedisTemplate.watch(REDIS_LOCK);
+                        if (value.equals(stringRedisTemplate.opsForValue().get(REDIS_LOCK))) {
+                            stringRedisTemplate.setEnableTransactionSupport(true);
+                            stringRedisTemplate.multi();
+                            // 无论中间程序有无出现异常，都必须要释放锁
+                            stringRedisTemplate.delete(REDIS_LOCK);
+                            List<Object> list = stringRedisTemplate.exec();
+                            if (list == null) {
+                                continue;
+                            }
+                        }
+                        stringRedisTemplate.unwatch();
+                        break;
+                    }
+
+
                 }
             }
         }
