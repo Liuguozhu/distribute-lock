@@ -1,0 +1,15 @@
+ ${AnsiColor.BRIGHT_BLUE}
+
+ .o88b.  .d88b.  d8888b. d88888b d8888b.
+d8P  Y8 .8P  Y8. 88  `8D 88'     88  `8D
+8P      88    88 88   88 88ooooo 88oobY'
+8b      88    88 88   88 88~~~~~ 88`8b
+Y8b  d8 `8b  d8' 88  .8D 88.     88 `88.
+ `Y88P'  `Y88P'  Y8888D' Y88888P 88   YD
+
+ ${AnsiColor.BRIGHT_GREEN}
+ ======================================================
+         Spring Boot :     ${spring-boot.version}
+ ======================================================
+     ${spring.application.name} :     ${spring.application.version}
+ ======================================================

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author LGZ
@@ -39,8 +38,6 @@ public class RedisController {
             // 加锁，相当于 redis 命令的 SETNX
             Boolean lockResult = stringRedisTemplate.opsForValue().setIfAbsent(REDIS_LOCK, value);
             if (lockResult == null || lockResult) {
-//                //给key增加过期时间，防止程序宕机一直没有释放锁。
-//                stringRedisTemplate.expire(REDIS_LOCK, 10L, TimeUnit.SECONDS);
                 try {
                     //查看库存
                     String result = stringRedisTemplate.opsForValue().get(key);
@@ -59,12 +56,12 @@ public class RedisController {
                     e.printStackTrace();
                     return returnString;
                 } finally {
-                    // 无论中间程序有无出现异常，都必须要释放锁
+                    // 释放锁
                     stringRedisTemplate.delete(REDIS_LOCK);
                 }
             }
         }
     }
 
-
+    
 }

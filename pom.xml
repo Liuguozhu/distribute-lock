@@ -13,6 +13,8 @@
     <modules>
         <module>redis001</module>
         <module>redis002</module>
+        <module>redis003</module>
+        <module>redis004</module>
     </modules>
 
     <parent>
